@@ -53,6 +53,7 @@ zinit ice pick"init.sh"; zinit light b4b4r07/enhancd
 
 zinit snippet OMZP::git
 zinit snippet OMZP::tmux
+zinit snippet OMZP::docker
 zinit snippet OMZP::debian
 zplg load $HOME/zshros
 
