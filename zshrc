@@ -77,7 +77,8 @@ if which colcon > /dev/null ; then
 fi
 
 if [ ! -z ${ARDUPILOT_ROOT+x} ] ; then
-    source /home/hs293go/src/ardupilot/Tools/completion/completion.zsh
+    path+=("$ARDUPILOT_ROOT/Tools/autotest")    
+    source $ARDUPILOT_ROOT/Tools/completion/completion.zsh
 fi
 
 if [ ! -z ${VCPKG_ROOT+x} ] ; then
@@ -120,4 +121,20 @@ QGroundControl() {
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/hs293go/QtProjects/build-qgroundcontrol-Desktop_Qt_5_15_2_GCC_64bit-Debug/libs/airmap-platform-sdk/linux/Qt.5.15:/home/hs293go/Qt/5.15.2/gcc_64/lib
     ~/QtProjects/build-qgroundcontrol-Desktop_Qt_5_15_2_GCC_64bit-Debug/staging/QGroundControl > /dev/null 2>&1 &
 }
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/hs293go/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/hs293go/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/hs293go/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/hs293go/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
 

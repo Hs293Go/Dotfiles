@@ -136,7 +136,8 @@ if which colcon > /dev/null ; then
 fi
 
 if [ ! -z ${ARDUPILOT_ROOT+x} ] ; then
-    source /home/hs293go/src/ardupilot/Tools/completion/completion.zsh
+    export PATH=$PATH:"$ARDUPILOT_ROOT/Tools/autotest"
+    source $ARDUPILOT_ROOT/Tools/completion/completion.zsh
 fi
 
 if [ ! -z ${VCPKG_ROOT+x} ] ; then
@@ -144,8 +145,22 @@ if [ ! -z ${VCPKG_ROOT+x} ] ; then
 fi
 
 if [ ! -z ${PX4_ROOT+x} ] ; then
-    typeset -T ROS_PACKAGE_PATH ros_package_path :
-    ros_package_path+=("$ROS_PACKAGE_PATH" "$PX4_ROOT" "$PX4_ROOT/Tools/sitl_gazebo")
+    export ROS_PACKAGE_PATH="$ROS_PACKAGE_PATH:$PX4_ROOT:$PX4_ROOT/Tools/sitl_gazebo"
     source $PX4_ROOT/Tools/setup_gazebo.bash $PX4_ROOT $PX4_ROOT/build/px4_sitl_default > /dev/null 2>&1
 fi
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/hs293go/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/hs293go/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/hs293go/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/hs293go/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
 
