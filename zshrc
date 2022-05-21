@@ -93,6 +93,10 @@ fi
 
 alias cls="clear"
 alias gzkill="killall gzserver gzclient"
+alias ls='ls --color=auto'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
 
 extract () {
     if [ -f "$1" ] ; then
