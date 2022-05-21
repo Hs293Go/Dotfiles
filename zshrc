@@ -98,6 +98,10 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
+if which QGroundControl > /dev/null ; then
+    alias QGroundControl='QGroundControl > /dev/null 2>&1 &'
+fi
+
 extract () {
     if [ -f "$1" ] ; then
         case $1 in
@@ -119,11 +123,6 @@ extract () {
     else
         echo "'$1' is not a valid file"
     fi
-}
-
-QGroundControl() {
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/hs293go/QtProjects/build-qgroundcontrol-Desktop_Qt_5_15_2_GCC_64bit-Debug/libs/airmap-platform-sdk/linux/Qt.5.15:/home/hs293go/Qt/5.15.2/gcc_64/lib
-    ~/QtProjects/build-qgroundcontrol-Desktop_Qt_5_15_2_GCC_64bit-Debug/staging/QGroundControl > /dev/null 2>&1 &
 }
 
 
