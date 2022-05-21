@@ -14,6 +14,14 @@ Refer to [this SE answer](https://unix.stackexchange.com/questions/71253/what-sh
 
 Refer to [this SE answer](https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc) for the key differences between the `bash` dotfiles.
 
+## Dependencies
+
+[enhancd](https://github.com/b4b4r07/enhancd) depends on a fuzzy finder. We use `fzy`. Install by
+
+``` bash
+sudo apt-get install fzy
+```
+
 ## Compilation
 
 We use [YouCompleteMe](https://github.com/ycm-core/YouCompleteMe.git) for autocompletion in vim. This plugin requires compiling!
