@@ -118,30 +118,30 @@ fi
 
 case $(lsb_release -sc) in
     *"bionic"* )
-        source /opt/ros/melodic/setup.zsh
+        source /opt/ros/melodic/setup.bash
         ;;
     *"focal"* )
-        source /opt/ros/noetic/setup.zsh
+        source /opt/ros/noetic/setup.bash
         ;;
     * )
         ;;
 esac
 
 if [ -d "$HOME/catkin_ws/install/local_setup.sh" ] ; then
-    source $HOME/catkin_ws/install/local_setup.zsh
+    source $HOME/catkin_ws/install/local_setup.bash
 fi
 
 if which colcon > /dev/null ; then
-    source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
+    source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 fi
 
 if [ ! -z ${ARDUPILOT_ROOT+x} ] ; then
     export PATH=$PATH:"$ARDUPILOT_ROOT/Tools/autotest"
-    source $ARDUPILOT_ROOT/Tools/completion/completion.zsh
+    source $ARDUPILOT_ROOT/Tools/completion/completion.bash
 fi
 
 if [ ! -z ${VCPKG_ROOT+x} ] ; then
-    source $VCPKG_ROOT/scripts/vcpkg_completion.zsh
+    source $VCPKG_ROOT/scripts/vcpkg_completion.bash
 fi
 
 if [ ! -z ${PX4_ROOT+x} ] ; then
