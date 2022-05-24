@@ -1,5 +1,5 @@
-[user]
-	email = hellston20a@gmail.com
-	name = Hs293Go
+[include]
+# For username / creds / etc
+path = ~/.gitconfig.local
 [core]
-	editor = vim
+editor = vim
