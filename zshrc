@@ -14,7 +14,6 @@ bindkey -v
 # The following lines were added by compinstall
 zstyle :compinstall filename '/home/hs293go/.zshrc'
 
-autoload -Uz compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 # End of lines added by compinstall
 
@@ -28,7 +27,6 @@ if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
 fi
 
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
-autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
 # Load a few important annexes, without Turbo
@@ -42,19 +40,25 @@ zinit light-mode for \
 ### End of Zinit's installer chunk
 zplugin ice depth=1; zplugin light romkatv/powerlevel10k
 
-zinit wait'!0' light-mode for \
-    zsh-users/zsh-autosuggestions \
-    zdharma-continuum/fast-syntax-highlighting
-
 zinit ice pick"init.sh"; zinit light b4b4r07/enhancd
+
+zinit wait lucid light-mode for \
+    atinit"zicompinit; zicdreplay" \
+        zdharma-continuum/fast-syntax-highlighting \
+    atload"_zsh_autosuggest_start" \
+        zsh-users/zsh-autosuggestions \
+    blockf atpull'zinit creinstall -q .' \
+        zsh-users/zsh-completions
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-zinit snippet OMZP::git
-zinit snippet OMZP::tmux
-zinit snippet OMZP::docker
-zinit snippet OMZP::debian
+zinit wait lucid for \
+    OMZP::git \
+    OMZP::tmux \
+    OMZP::docker \
+    OMZP::debian
+
 zplg load $HOME/zshros
 
 case $(lsb_release -sc) in
