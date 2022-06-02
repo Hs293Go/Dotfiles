@@ -1,3 +1,8 @@
+let g:pathogen_disabled = []
+if v:version < '801'
+    call add(g:pathogen_disabled, 'YouCompleteMe')
+endif
+
 runtime! bundle/vim-pathogen/autoload/pathogen.vim
 execute pathogen#infect()
 
