@@ -13,6 +13,9 @@ set noswapfile
 set hlsearch
 set ignorecase
 set incsearch
+autocmd FileType c,cpp,h,hpp set ts=2 sw=2 softtabstop=2 expandtab
+
+autocmd FileType c,cpp,h,hpp setlocal equalprg=clang-format
 set tabstop=4 shiftwidth=4 softtabstop=4 expandtab
 set backspace=indent,eol,start
 
@@ -31,11 +34,12 @@ nmap <silent> // :nohlsearch<CR>
 
 " Movements shortcuts {{{
 
-" C-h/j/k/l to move between buffers
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
+" tmux-style moving between buffers
+map <C-a><Left> <C-w>h
+map <C-a><Down> <C-w>j
+map <C-a><Up> <C-w>k
+map <C-a><Right> <C-w>l
+
 " Buffer switching/management, might as well use those keys for something useful
 map <Right> :bnext<CR>
 imap <Right> <ESC>:bnext<CR>
@@ -74,6 +78,10 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='molokai'
 
 let g:ycm_autoclose_preview_window_after_insertion = 1
+" Let clangd fully control code completion
+let g:ycm_clangd_uses_ycmd_caching = 0
+" Use installed clangd, not YCM-bundled clangd which doesn't get updates.
+let g:ycm_clangd_binary_path = exepath("/home/hs293go/.config/Code/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/13.0.0/clangd_13.0.0/bin/clangd")
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -83,3 +91,4 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
