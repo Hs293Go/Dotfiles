@@ -1,21 +1,18 @@
-# Enable Powerlevel12k instant prompt. Should stay close to the top of ~/.zshrc.
+# Enable Powerlevel13# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
-HISTSIZE=10000
+HISTSIZE=1000
 SAVEHIST=10000
 bindkey -v
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-zstyle :compinstall filename '/home/hs293go/.zshrc'
-
-autoload -U +X bashcompinit && bashcompinit
-# End of lines added by compinstall
+zstyle :compinstall filename "$HOME/.zshrc"
 
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
@@ -27,6 +24,7 @@ if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
 fi
 
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
 # Load a few important annexes, without Turbo
@@ -38,52 +36,106 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 
 ### End of Zinit's installer chunk
-zplugin ice depth=1; zplugin light romkatv/powerlevel10k
-
-zinit ice pick"init.sh"; zinit light b4b4r07/enhancd
 
 zinit wait lucid light-mode for \
     atinit"zicompinit; zicdreplay" \
-        zdharma-continuum/fast-syntax-highlighting \
+    zdharma-continuum/fast-syntax-highlighting \
     atload"_zsh_autosuggest_start" \
-        zsh-users/zsh-autosuggestions \
+    zsh-users/zsh-autosuggestions \
     blockf atpull'zinit creinstall -q .' \
-        zsh-users/zsh-completions
+    zsh-users/zsh-completions
+
+zinit depth=1 lucid nocd for romkatv/powerlevel10k
+
+zinit ice pick"init.sh"; zinit light b4b4r07/enhancd
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# Load git and debian
 zinit wait lucid for \
     OMZP::git \
-    OMZP::tmux \
-    OMZP::docker \
     OMZP::debian
+
+# Load the docker plugin only if docker is available
+if command -v docker > /dev/null ; then
+    zinit ice as"completion"
+    zinit snippet OMZP::docker/_docker
+fi
+
+# Load the tmux plugin only if tmux is available
+command -v tmux > /dev/null && zinit snippet OMZP::tmux
 
 zplg load $HOME/zshros
 
-case $(lsb_release -sc) in
+# Convenient bash settings pulled from bashrc
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+# End of settings pulled from bashrc
+
+# One command to clear the screen for less cognitive load working with WSL
+alias cls='clear'
+
+if [ -d "$HOME/anaconda3" ] ; then
+    CONDA_ROOT="$HOME/anaconda3"
+elif [ -f "$HOME/minconda3" ] ; then
+    CONDA_ROOT="$HOME/miniconda3"
+fi
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$($CONDA_ROOT/bin/conda 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "$CONDA_ROOT/etc/profile.d/conda.sh" ]; then
+        . "$CONDA_ROOT/etc/profile.d/conda.sh"
+    else
+        export PATH="$CONDA_ROOT/bin:$PATH"
+    fi
+fi
+
+unset __conda_setup
+# <<< conda initialize <<<
+
+case "$(lsb_release -sc)" in
     *"bionic"* )
-        source /opt/ros/melodic/setup.zsh
+        ROSSOURCE="/opt/ros/melodic/setup.zsh"
         ;;
     *"focal"* )
-        source /opt/ros/noetic/setup.zsh
+        ROSSOURCE="/opt/ros/noetic/setup.zsh"
         ;;
     * )
         ;;
 esac
+[[ ! -f $ROSSOURCE ]] && source $ROSSOURCE
 
-if [ -d "$HOME/catkin_ws/install/local_setup.sh" ] ; then
-    source $HOME/catkin_ws/install/local_setup.zsh
-fi
+for CATKINSOURCE in "$HOME/catkin_ws/install/local_setup.zsh" \
+    "$HOME/catkin_ws/devel/setup.zsh" \
+    "$HOME/dev_ws/install/local_setup.zsh" ; do
+    if [[ -f $CATKINSOURCE ]] ; then
+        source $CATKINSOURCE
+        break
+    fi
+done
 
-if which colcon > /dev/null ; then
-    source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
-fi
-
-if [ ! -z ${ARDUPILOT_ROOT+x} ] ; then
-    path+=("$ARDUPILOT_ROOT/Tools/autotest")    
-    source $ARDUPILOT_ROOT/Tools/completion/completion.zsh
-fi
+command -v colcon > /dev/null && source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
 
 if [ ! -z ${VCPKG_ROOT+x} ] ; then
     source $VCPKG_ROOT/scripts/vcpkg_completion.zsh
@@ -95,12 +147,7 @@ if [ ! -z ${PX4_ROOT+x} ] ; then
     source $PX4_ROOT/Tools/setup_gazebo.bash $PX4_ROOT $PX4_ROOT/build/px4_sitl_default > /dev/null 2>&1
 fi
 
-alias cls="clear"
 alias gzkill="killall gzserver gzclient"
-alias ls='ls --color=auto'
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
 
 if which QGroundControl > /dev/null ; then
     alias QGroundControl='QGroundControl > /dev/null 2>&1 &'
@@ -128,20 +175,3 @@ extract () {
         echo "'$1' is not a valid file"
     fi
 }
-
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/hs293go/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/hs293go/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/hs293go/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/hs293go/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
