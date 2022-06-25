@@ -1,5 +1,5 @@
 let g:pathogen_disabled = []
-if v:version < '801'
+if v:version < '801' || !has('python')
     call add(g:pathogen_disabled, 'YouCompleteMe')
 endif
 
