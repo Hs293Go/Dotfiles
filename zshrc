@@ -114,7 +114,7 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-case "$(lsb_release -sc)" in
+case "$(command -v lsb_release > /dev/null && lsb_release -sc)" in
     *"bionic"* )
         ROSSOURCE="/opt/ros/melodic/setup.zsh"
         ;;
@@ -124,7 +124,7 @@ case "$(lsb_release -sc)" in
     * )
         ;;
 esac
-[[ ! -f $ROSSOURCE ]] && source $ROSSOURCE
+[[ ! -f $ROSSOURCE ]] || source $ROSSOURCE
 
 for CATKINSOURCE in "$HOME/catkin_ws/install/local_setup.zsh" \
     "$HOME/catkin_ws/devel/setup.zsh" \
