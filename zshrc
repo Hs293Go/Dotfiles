@@ -95,7 +95,7 @@ alias cls='clear'
 
 if [ -d "$HOME/anaconda3" ] ; then
     CONDA_ROOT="$HOME/anaconda3"
-elif [ -f "$HOME/minconda3" ] ; then
+elif [ -d "$HOME/miniconda3" ] ; then
     CONDA_ROOT="$HOME/miniconda3"
 fi
 # >>> conda initialize >>>
