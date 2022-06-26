@@ -59,8 +59,7 @@ zinit wait lucid for \
 
 # Load the docker plugin only if docker is available
 if command -v docker > /dev/null ; then
-    zinit ice as"completion"
-    zinit snippet OMZP::docker/_docker
+    zinit snippet OMZP::docker
 fi
 
 # Load the tmux plugin only if tmux is available
